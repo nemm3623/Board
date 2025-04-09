@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>회원가입</title>
+</head>
+<body align = "center">
+<h2><a href="/">Board</a></h2>
+<form method="post" action="/register">
+    <h3>회원가입</h3>
+    <div><p>아이디 : <input name="id" type="text"></p></div>
+    <div><p>비밀번호 : <input name="pw" type="password"></p></div>
+    <div><p>이메일 : <input name="email" type="email"></p></div>
+    <div><p>이름 : <input name="name" type="text"></p></div>
+    <div><p style="color : red"> {{ error }} </p> </div>
+    <div><input type="submit" value="계정 생성"></div>
+</form>
+</body>
+</html>

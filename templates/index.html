@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Board</title>
+</head>
+<body>
+    <h3><a href="/login">로그인</a></h3>
+    <h3><a href="/write">게시물 작성</a></h3>
+
+
+    {% for board in boards %}
+
+        <p>{{ board.title }}</p>
+        <p>{{ board.content }}</p>
+        <p>{{ board.id }}</p>
+
+    {% endfor %}
+
+</body>
+</html>
