@@ -7,13 +7,11 @@ app = Flask(__name__)
 
 app.secret_key = secrets.token_hex(32)
 
-
 @app.route('/')
 def index():
     boards = models.get_allBoards()
     print(boards)
     return render_template('index.html', boards=boards)
-
 
 ############ 로그인 ##############
 @app.route('/login', methods=['GET', 'POST'])
@@ -61,7 +59,7 @@ def register():
 
         return redirect(url_for('login'))
 
-
+################## 게시물 작성 ###################
 @app.route('/write', methods=['GET', 'POST'])
 def write():
     if request.method == 'GET':
@@ -79,12 +77,30 @@ def write():
             error = "내용을 입력해주세요."
             return render_template('write.html', error=error)
 
-        board = {"title": title, "content": content, "id": session['user']["id"]}
-        models.create_Board(board)
+        print(type(session['user']))
 
-        print("clear2")
+        models.create_Board(title, content, session['user']['id'])
 
         return redirect(url_for('index'))
+
+################## 게시물 접속 ###################
+@app.route('/post/<int:No>', methods=['GET'])
+def post(No):
+    if request.method == 'GET':
+        board = models.get_Board(No)
+
+        print(request.cookies.get('user'), session['user'])
+
+        #if request.cookies.get('user') == session['user']:
+
+
+        return render_template("post.html", board=board)
+
+    #elif request.method == 'POST':
+
+
+
+
 
 if __name__ == '__main__':
     app.run(port=5000)

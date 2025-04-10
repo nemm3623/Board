@@ -8,14 +8,14 @@
     <h3><a href="/login">로그인</a></h3>
     <h3><a href="/write">게시물 작성</a></h3>
 
-
+    <ul>
     {% for board in boards %}
 
-        <p>{{ board.title }}</p>
-        <p>{{ board.content }}</p>
-        <p>{{ board.id }}</p>
+        <li><a href="/post/{{ board.No }}">{{ board.title }}</a></li>
+        <li>{{ board.id }}</li>
+        <li>{{ board.views }}</li>
 
     {% endfor %}
-
+    </ul>
 </body>
 </html>

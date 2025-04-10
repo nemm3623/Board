@@ -30,13 +30,13 @@ def get_allBoards() :
     return result
 
 # 게시물 찾기
-def get_Board(board_id):
+def get_Board(No):
     db_connection, cursor = get_connection()
 
     # 튜플이 아닌 문자열이나 정수로 값을 넘기면 excute()는 시퀀스를 요구하기 때문에 에러발생
     # EX) "abcd" -> 'a', 'b', 'c', 'd' 로 해석
-    query = "SELECT * FROM Boards WHERE id=%s"
-    cursor.execute(query, (board_id,))
+    query = "SELECT * FROM Boards WHERE No=%s"
+    cursor.execute(query, (No,))
     result = cursor.fetchone()
 
     cursor.close()
@@ -44,11 +44,11 @@ def get_Board(board_id):
 
     return result
 
-def create_Board(board):
+def create_Board(title, content, id):
     db_connection, cursor = get_connection()
 
     query = "INSERT INTO Boards (title, content, id) VALUES (%s, %s, %s)"
-    cursor.execute(query, (board['title'], board['content'], board['id']))
+    cursor.execute(query, (title,content,id))
 
     db_connection.commit()
 
