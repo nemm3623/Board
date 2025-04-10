@@ -15,6 +15,13 @@
     <div>
         <p>{{ board.content }}</p>
     </div>
-
+    {% if  author  %}
+        <div>
+            <form method="post" action="/post/{{ board.No }}">
+                <input type="submit" name="edit" value="수정">
+                <input type="submit" name="edit" value="삭제">
+            </form>
+        </div>
+    {% endif %}
 </body>
 </html>

@@ -21,8 +21,10 @@
                 </label>
             </p>
         </div>
-        <input type="submit">
+        <input type="submit" value="완료">
     </form>
-
+    {% for msg in get_flashed_messages() %}
+        <div>{{ msg }}</div>
+    {% endfor %}
 </body>
 </html>

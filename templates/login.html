@@ -7,9 +7,13 @@
 <body align = "center">
     <div><h2><a href="/">Board</a></h2></div>
     <form method="post" action="/login">
-        <div><p>ID : <input name="id" type="text"></p></div>
-        <div><p>Password : <input name="pw" type="password"></p></div>
-        <div><p style="color : red"> {{ error }} </p> </div>
+        <div><input name="id" type="text" placeholder="ID"></div>
+        <div><input name="pw" type="password" placeholder="Password"></div>
+
+        {% for msg in get_flashed_messages() %}
+            <div style="color: red">{{ msg }}</div>
+        {% endfor %}
+
         <div><input type="submit" value="로그인"></div>
         <div><a href="/register">회원 가입</a></div>
     </form>
