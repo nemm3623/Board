@@ -52,13 +52,13 @@ def register():
 
         if not id or not email or not name or not password:
             error = "빈칸을 채워주세요."
-            return render_template('register.html', error=error)
+            return redirect(url_for('register.html', error=error))
 
         result = models.get_User(id, password)
 
         if not result:
             error = '이미 존재하는 아이디입니다.'
-            return render_template("register.html", error=error)
+            return redirect(url_for("register.html", error=error))
 
         return redirect(url_for('login'))
 
