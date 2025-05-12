@@ -3,19 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <title>Board</title>
+    <link href="/static/CSS/index.css" rel="stylesheet">
 </head>
 <body>
-    <h3><a href="/login">로그인</a></h3>
-    <h3><a href="/write">게시물 작성</a></h3>
+<div class="container">
+    <h3>
+        {% if status %}
+            <a href="/logout">로그아웃</a>
+        {% else %}
+            <a href="/login">로그인</a>
+        {% endif %}
 
-    <ul>
+        <a href="/write">게시물 작성</a>
+    </h3>
+
+    <div id="col">
+        <span class="title">제목</span>
+        <span class="author">작성자</span>
+        <span class="date">작성일</span>
+        <span class="views">조회수</span>
+    </div>
+
     {% for board in boards %}
-
-        <li><a href="/post/{{ board.No }}">{{ board.title }}</a></li>
-        <li>{{ board.id }}</li>
-        <li>{{ board.views }}</li>
-
+        <div class="row">
+                <span class="title">
+                    <a href="/post/{{ board.No }}">{{ board.title }}</a>
+                </span>
+            <span class="author">{{ board.id }}</span>
+            <span class="date">{{ board.create_at }}</span>
+            <span class="views">{{ board.views }}</span>
+        </div>
     {% endfor %}
-    </ul>
+
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <script>
+                alert("{{ messages[0] }}");
+            </script>
+        {% endif %}
+    {% endwith %}
+</div>
 </body>
 </html>

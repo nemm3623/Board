@@ -1,27 +1,32 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <title>게시물 - {{ board.title }}</title>
+    <link href="/static/CSS/post.css" rel="stylesheet">
 </head>
 <body>
+<div class="post-container">
+    <h3>{{ board.title }}</h3>
 
-    <div>
-        <h3>제목 : {{ board.title }}</h3>
-        <p>작성자 : {{ board.id }}</p>
-        <p>조회 수 : {{ board.views }}</p>
-        <p>작성 날짜 : {{ board.create_at }}</p>
+    <div class="post-meta">
+        작성자 : {{ board.id }}<br>
+        조회 수 : {{ board.views }}<br>
+        작성 날짜 : {{ board.create_at }}
     </div>
-    <div>
-        <p>{{ board.content }}</p>
+
+    <div class="post-content">
+        {{ board.content }}
     </div>
-    {% if  author  %}
-        <div>
-            <form method="post" action="/post/{{ board.No }}">
+
+    {% if author %}
+        <form method="post" action="/post/{{ board.No }}">
+            <div class="button-group">
                 <input type="submit" name="edit" value="수정">
                 <input type="submit" name="edit" value="삭제">
-            </form>
-        </div>
+            </div>
+        </form>
     {% endif %}
+</div>
 </body>
 </html>

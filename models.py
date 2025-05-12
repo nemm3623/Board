@@ -6,7 +6,7 @@ def get_connection():
     db_connection = pymysql.connect(
         host='localhost',
         user='root',
-        passwd='',
+        passwd='wnsdud2ekr',
         database='Board',
         charset='utf8mb4',
         cursorclass=cursors.DictCursor
@@ -16,7 +16,7 @@ def get_connection():
 
 
 # 모든 게시물
-def get_allBoards():
+def get_all_boards():
     db_connection, cursor = get_connection()
 
     query = "SELECT * FROM Boards"
@@ -30,15 +30,24 @@ def get_allBoards():
 
 
 # 게시물 찾기
-def get_board(No):
+def get_board(keyword=None):
     db_connection, cursor = get_connection()
 
-    # 튜플이 아닌 문자열이나 정수로 값을 넘기면 excute()는 시퀀스를 요구하기 때문에 에러발생
-    # EX) "abcd" -> 'a', 'b', 'c', 'd' 로 해석
-    query = "SELECT * FROM Boards WHERE No=%s"
-    cursor.execute(query, (No,))
-    result = cursor.fetchone()
+    if keyword is None:
+        return get_all_boards()
 
+    new_word = f"%{keyword}%"
+
+    try:
+        no = int(keyword)
+        query = "SELECT * FROM Boards WHERE No = %s OR id LIKE %s OR title LIKE %s"
+        cursor.execute(query, (no, new_word, new_word))
+    except ValueError:
+        # keyword가 숫자가 아니면 No 비교는 제외
+        query = "SELECT * FROM Boards WHERE id LIKE %s OR title LIKE %s"
+        cursor.execute(query, (new_word, new_word))
+
+    result = cursor.fetchall()
     cursor.close()
     db_connection.close()
 
@@ -46,11 +55,11 @@ def get_board(No):
 
 
 # 게시물 작성
-def create_Board(title, content, id):
+def create_Board(title, content, id, secret):
     db_connection, cursor = get_connection()
-
-    query = "INSERT INTO Boards (title, content, id) VALUES (%s, %s, %s)"
-    cursor.execute(query, (title, content, id))
+    print(secret)
+    query = "INSERT INTO Boards (title, content, id,secret) VALUES (%s, %s, %s,%s)"
+    cursor.execute(query, (title, content, id, secret))
 
     db_connection.commit()
 
@@ -71,11 +80,11 @@ def update_views(No):
 
 
 # 게시물 수정
-def update_Board(No, title, content):
+def update_board(no, title, content, secret):
     db_connection, cursor = get_connection()
 
-    query = "UPDATE Boards SET title = %s, content = %s WHERE No=%s"
-    cursor.execute(query, (title, content, No))
+    query = "UPDATE Boards SET title = %s, content = %s, secret = %s WHERE No=%s"
+    cursor.execute(query, (title, content, int(secret), no))
 
     db_connection.commit()
     cursor.close()
@@ -83,17 +92,18 @@ def update_Board(No, title, content):
 
 
 # 게시물 삭제
-def delete_Board(No):
+def delete_board(no):
     db_connection, cursor = get_connection()
     query = "DELETE FROM Boards WHERE No=%s"
-    cursor.execute(query, (No))
+    cursor.execute(query, (no))
 
     db_connection.commit()
     cursor.close()
     db_connection.close()
 
-# 유저 찾기
-def get_User(id, pw):
+
+# 로그인
+def get_user(id, pw):
     db_connection, cursor = get_connection()
 
     query = "SELECT * FROM Users WHERE id = %s and password = %s"
@@ -110,8 +120,8 @@ def get_User(id, pw):
 def register(id, name, email, password):
     db_connection, cursor = get_connection()
 
-    query = "SELECT * FROM Users WHERE id = %s"
-    cursor.execute(query, (id,))
+    query = "SELECT * FROM Users WHERE id = %s or email = %s"
+    cursor.execute(query, (id, email))
     result = cursor.fetchone()
 
     if result:
@@ -129,3 +139,31 @@ def register(id, name, email, password):
     db_connection.close()
 
     return True
+
+
+# 아이디 찾기
+def find_id(name, email):
+    db_connection, cursor = get_connection()
+
+    query = "SELECT id FROM Users WHERE name = %s AND email = %s"
+    cursor.execute(query, (name, email))
+    result = cursor.fetchone()
+
+    cursor.close()
+    db_connection.close()
+
+    return result
+
+
+# 비밀번호 찾기
+def find_passwd(id, name, email):
+    db_connection, cursor = get_connection()
+
+    query = "SELECT * FROM Users WHERE id = %s AND name = %s AND email = %s"
+    cursor.execute(query, (id, name, email))
+    result = cursor.fetchone()
+
+    cursor.close()
+    db_connection.close()
+
+    return result

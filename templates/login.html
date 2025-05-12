@@ -2,20 +2,28 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>Board_Login</title>
+    <title>Login</title>
+    <link href="/static/CSS/login.css" rel="stylesheet">
 </head>
-<body align = "center">
-    <div><h2><a href="/">Board</a></h2></div>
+<body>
+<div class="login-container">
+    <h2><a href="/">Board</a></h2>
     <form method="post" action="/login">
-        <div><input name="id" type="text" placeholder="ID"></div>
-        <div><input name="pw" type="password" placeholder="Password"></div>
+        <input name="id" type="text" placeholder="ID">
+        <input name="pw" type="password" placeholder="Password">
 
         {% for msg in get_flashed_messages() %}
-            <div style="color: red">{{ msg }}</div>
+            <div class="error-message">{{ msg }}</div>
         {% endfor %}
 
-        <div><input type="submit" value="로그인"></div>
-        <div><a href="/register">회원 가입</a></div>
+        <input type="submit" value="로그인">
+
+        <div class="links">
+            <a href="/findID">아이디 찾기</a>
+            <a href="/findPW">비밀번호 찾기</a>
+            <a href="/register">회원 가입</a>
+        </div>
     </form>
+</div>
 </body>
 </html>

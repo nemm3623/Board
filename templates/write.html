@@ -1,30 +1,33 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <title>게시물 작성</title>
+    <link href="/static/CSS/write.css" rel="stylesheet">
 </head>
 <body>
-
+<div class="write-container">
+    <h2>게시물 작성</h2>
     <form method="post" action="/write">
-        <div>
-            <p>
-                <label>제목 :
-                    <input type=text name = title>
-                </label>
-            </p>
+        <label>제목
+            <input type="text" name="title" required>
+        </label>
+
+        <label>내용
+            <textarea name="content" required></textarea>
+        </label>
+
+        <div class="checkbox-group">
+            <input type="checkbox" name="secret" value="1">
+            <span>비밀글로 작성</span>
         </div>
-        <div>
-            <p>
-                <label> 내용 :
-                    <textarea name="content"></textarea>
-                </label>
-            </p>
-        </div>
+
+        {% if error %}
+            <div class="error-message">{{ error }}</div>
+        {% endif %}
+
         <input type="submit" value="완료">
     </form>
-    {% for msg in get_flashed_messages() %}
-        <div>{{ msg }}</div>
-    {% endfor %}
+</div>
 </body>
 </html>

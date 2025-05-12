@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div>
+        <h2>비밀번호 찾기</h2>
+        <form method="post" action="/find_account">
+            <label for="id">
+                아이디 : <input type="text" name="id">
+            </label>
+            <p style="color: red">{{ error }}</p>
+            <input type="submit" value="확인">
+        </form>
+    </div>
+    {% if pw %}
+        <div>
+            <p>해당 아이디의 패스워드는 <b>{{ pw }}</b> 입니다.</p>
+        </div>
+    {% endif %}
+</body>
+</html>

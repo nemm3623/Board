@@ -1,5 +1,6 @@
 import secrets
 import models
+import posts
 
 from flask import Flask, render_template, request, session, redirect, url_for, flash
 
@@ -8,10 +9,25 @@ app = Flask(__name__)
 app.secret_key = secrets.token_hex(32)
 
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def index():
-    boards = models.get_allBoards()
-    return render_template('index.html', boards=boards)
+    if request.method == 'GET':
+        boards = models.get_all_boards()
+
+        status = session.get('user')
+
+        return render_template('index.html', boards=boards, status=status)
+
+    elif request.method == 'POST':
+        keyword = request.form['keyword']
+        boards = models.get_board(keyword)
+        return render_template('index.html', boards=boards)
+
+
+@app.route('/logout', methods=['GET'])
+def logout():
+    session.pop('user', None)
+    return redirect(url_for('index'))
 
 
 # 로그인
@@ -25,7 +41,7 @@ def login():
         id = request.form['id']
         password = request.form['pw']
 
-        user = models.get_User(id, password)
+        user = models.get_user(id, password)
 
         if user is None:
             error = '존재하지 않는 계정입니다.'
@@ -52,15 +68,59 @@ def register():
 
         if not id or not email or not name or not password:
             error = "빈칸을 채워주세요."
-            return redirect(url_for('register.html', error=error))
+            return render_template('register.html', error=error)
 
-        result = models.get_User(id, password)
+        result = models.register(id, name, email, password)
 
         if not result:
             error = '이미 존재하는 아이디입니다.'
-            return redirect(url_for("register.html", error=error))
+            return render_template('register.html', error=error)
 
         return redirect(url_for('login'))
+
+
+# 아이디 찾기
+@app.route('/findID', methods=['GET', 'POST'])
+def find_id():
+    if request.method == 'GET':
+        return render_template('findID.html')
+
+    elif request.method == 'POST':
+        name = request.form['name']
+        email = request.form['email']
+
+        result = models.find_id(name, email)
+        if not result:
+            error = "존재하지 않는 사용자입니다."
+            return render_template('findID.html', error=error)
+
+        return render_template('findID.html', id=result)
+
+
+# 비밀번호 찾기
+@app.route('/findPW', methods=['GET', 'POST'])
+def find_pw():
+    if request.method == 'GET':
+        return render_template('findPW.html')
+
+    elif request.method == 'POST':
+        id = request.form['id']
+        name = request.form['name']
+        email = request.form['email']
+
+        result = models.find_passwd(id, name, email)
+
+        if result:
+            return render_template('findPW.html', result=result)
+        else:
+            return render_template('findPW.html', error=True)
+
+
+# 내 프로필 보기
+@app.route('/myprofile', methods=['GET', 'POST'])
+def myprofile():
+    if request.method == 'GET':
+        return render_template('myprofile.html')
 
 
 # 게시물 작성
@@ -71,70 +131,69 @@ def write():
 
     elif request.method == 'POST':
 
-        title = request.form['title']
-        content = request.form['content']
-
         if session.get('user') is None:
             flash("로그인 후 이용해주세요.")
             return redirect(url_for('login'))
 
-        if not title or not content:
-            flash("빈칸을 채워주세요.")
-            return redirect(url_for('write'))
+        posts.write()
 
-
-        models.create_Board(title, content, session['user']['id'])
-
-        return redirect(url_for('index'))
 
 
 # 게시물 방문
-@app.route('/post/<int:No>', methods=['GET','POST'])
-def post(No):
+@app.route('/post/<int:no>', methods=['GET', 'POST'])
+def post(no):
     if request.method == 'GET':
-        board = models.get_board(No)
-        models.update_views(No)
+        board = models.get_board(no)[0]
 
         # 요청을 보낸 클라이언트의 세션을 획득
-        is_author = session.get('user')
+        client = session.get('user')
 
+        print(board['secret'])
         # 클라이언트의 id가 작성자의 id와 같은지 확인
-        if is_author and is_author['id'] == session['user']['id']:
+        if client and client['id'] == board['id']:
+            models.update_views(no)
             return render_template('post.html', board=board, author=True)
+        elif board['secret'] == 1:    # 비밀 글의 경우 작성자가 아니면 확인불가
+            flash("해당 글은 비밀글로 작성자만 볼 수 있습니다.")
+            return redirect(url_for('index'))
         else:
-            return render_template("post.html", board=board)
+            models.update_views(no)
+            return render_template("post.html", board=board, author=False)
 
     elif request.method == 'POST':
 
         edit = request.form.get('edit')
 
-        if (edit == "수정"):
-            return redirect(url_for('update', No=No))
-        elif (edit == "삭제"):
-            models.delete_Board(No)
+        if edit == "수정":
+            return redirect(url_for('update', no=no))
+        elif edit == "삭제":
+            models.delete_board(no)
             return redirect(url_for('index'))
 
 
-if __name__ == '__main__':
-    app.run(port=5000)
-
-
-@app.route('/update/<int:No>', methods=['GET', 'POST'])
-def update(No):
+# 게시글 수정
+@app.route('/update/<int:no>', methods=['GET', 'POST'])
+def update(no):
     if request.method == 'GET':
-        board = models.get_board(No)
+        board = models.get_board(no)[0]
         return render_template('update.html', board=board)
 
     elif request.method == 'POST':
         title = request.form['title']
         content = request.form['content']
+        secret = request.form.get('secret', '0')
 
         if not title:
-            error = "제목을 입력해주세요."
-            return render_template('update.html', error=error)
+            flash("제목을 입력해주세요.")
+            return redirect(url_for('update', no=no))
         elif not content:
-            error = "내용을 입력해주세요."
-            return render_template('update.html', error=error)
+            flash("내용을 입력해주세요.")
+            return redirect(url_for('update', no=no))
 
-        models.update_Board(No, title, content)
+        models.update_board(no, title, content, int(secret))
+        print(secret)
         return redirect(url_for('index'))
+
+
+if __name__ == '__main__':
+    app.run(port=5000)

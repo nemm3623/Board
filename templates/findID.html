@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>계정 찾기</title>
+</head>
+<body>
+    <div>
+        <h2>아이디 찾기</h2>
+        <form method="post" action="/findID">
+            <label for="name">
+                이름 : <input type="text" name="name">
+            </label>
+            <label for="email">
+                이메일 : <input type="email" name="email">
+            </label>
+            <p style="color: red">{{ error }}</p>
+            <input type="submit" value="확인">
+        </form>
+    </div>
+{% if id %}
+	<div>
+        <p>해당 사용자 정보의 ID는 <b>{{ id }}</b> 입니다.</p>
+    </div>
+{% endif %}
+</body>
+</html>

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>내 프로필</title>
+</head>
+<body>
+<div>
+    <p>이름   {{ user.name }}</p>
+    <p>이메일   {{ user.email }}</p>
+</div>
+<div>
+    <div>
+        <h2>작성한 게시물</h2>
+    </div>
+    {% for board in boards %}
+
+        <li><a href="/post/{{ board.No }}">{{ board.title }}</a></li>
+        <li>{{ board.id }}</li>
+        <li>{{ board.views }}</li>
+
+    {% endfor %}
+</div>
+</body>
+</html>

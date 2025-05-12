@@ -1,19 +1,38 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <title>회원가입</title>
+    <link href="/static/CSS/register.css" rel="stylesheet">
 </head>
-<body align = "center">
-<h2><a href="/">Board</a></h2>
-<form method="post" action="/register">
-    <h3>회원가입</h3>
-    <div><p>아이디 : <input name="id" type="text"></p></div>
-    <div><p>비밀번호 : <input name="pw" type="password"></p></div>
-    <div><p>이메일 : <input name="email" type="email"></p></div>
-    <div><p>이름 : <input name="name" type="text"></p></div>
-    <div><p style="color : red"> {{ error }} </p> </div>
-    <div><input type="submit" value="계정 생성"></div>
-</form>
+<body>
+<div class="register-container">
+    <h2><a href="/">Board</a></h2>
+    <form method="post" action="/register">
+        <h3>회원가입</h3>
+
+        <label>아이디
+            <input name="id" type="text" required>
+        </label>
+
+        <label>비밀번호
+            <input name="pw" type="password" required>
+        </label>
+
+        <label>이메일
+            <input name="email" type="email" required>
+        </label>
+
+        <label>이름
+            <input name="name" type="text" required>
+        </label>
+
+        {% if error %}
+            <div class="error-message">{{ error }}</div>
+        {% endif %}
+
+        <input type="submit" value="계정 생성">
+    </form>
+</div>
 </body>
 </html>
