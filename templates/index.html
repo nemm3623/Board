@@ -7,33 +7,56 @@
 </head>
 <body>
 <div class="container">
-    <h3>
-        {% if status %}
-            <a href="/logout">로그아웃</a>
-        {% else %}
-            <a href="/login">로그인</a>
-        {% endif %}
+    <div class="module">
+        <h3>
+            {% if status %}
+                <a href="/logout">로그아웃</a>
+                <a href="/my-profile">내 프로필</a>
+            {% else %}
+                <a href="/login">로그인</a>
+            {% endif %}
 
-        <a href="/write">게시물 작성</a>
-    </h3>
-
-    <div id="col">
-        <span class="title">제목</span>
-        <span class="author">작성자</span>
-        <span class="date">작성일</span>
-        <span class="views">조회수</span>
+            <a href="/write">게시물 작성</a>
+        </h3>
     </div>
 
-    {% for board in boards %}
-        <div class="row">
-                <span class="title">
-                    <a href="/post/{{ board.No }}">{{ board.title }}</a>
-                </span>
-            <span class="author">{{ board.id }}</span>
-            <span class="date">{{ board.create_at }}</span>
-            <span class="views">{{ board.views }}</span>
+    <div class="search">
+        <form method="post" action="/">
+            <label>
+               <input type="search" name="keyword" placeholder="검색">
+            </label>
+        </form>
+    </div>
+
+    <div id="contents">
+        <div>
+            {% for i in list %}
+                <div class="user">{{ i.id }}</div>
+            {% endfor %}
         </div>
-    {% endfor %}
+
+        <div>
+            <div id="col">
+                <span class="title">제목</span>
+                <span class="author">작성자</span>
+                <span class="date">작성일</span>
+                <span class="views">조회수</span>
+            </div>
+
+            <div>
+            {% for board in boards %}
+                <span class="row">
+                        <span class="title">
+                            <a href="/post/{{ board.No }}">{{ board.title }}</a>
+                        </span>
+                    <span class="author">{{ board.id }}</span>
+                    <span class="date">{{ board.create_at }}</span>
+                    <span class="views">{{ board.views }}</span>
+                </span>
+            {% endfor %}
+            </div>
+        </div>
+    </div>
 
     {% with messages = get_flashed_messages() %}
         {% if messages %}

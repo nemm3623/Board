@@ -40,11 +40,12 @@ def get_board(keyword=None):
 
     try:
         no = int(keyword)
-        query = "SELECT * FROM Boards WHERE No = %s OR id LIKE %s OR title LIKE %s"
+        query = "SELECT * FROM Boards WHERE No = %s OR id = %s OR title LIKE %s"
         cursor.execute(query, (no, new_word, new_word))
+
     except ValueError:
         # keyword가 숫자가 아니면 No 비교는 제외
-        query = "SELECT * FROM Boards WHERE id LIKE %s OR title LIKE %s"
+        query = "SELECT * FROM Boards WHERE id = %s OR title LIKE %s"
         cursor.execute(query, (new_word, new_word))
 
     result = cursor.fetchall()
@@ -100,6 +101,19 @@ def delete_board(no):
     db_connection.commit()
     cursor.close()
     db_connection.close()
+
+
+def get_all_user():
+    db_connection, cursor = get_connection()
+
+    query = "SELECT * FROM Users"
+    cursor.execute(query)
+    result = cursor.fetchall()
+
+    cursor.close()
+    db_connection.close()
+
+    return result
 
 
 # 로그인

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>내 프로필</title>
+    <link href="/static/CSS/my-profile.css" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <a href="/">Board</a>
+    </div>
+
+    <div class="profile">
+        <p><strong>이름:</strong> {{ user.name }}</p>
+        <p><strong>이메일:</strong> {{ user.email }}</p>
+    </div>
+
+    <div>
+        <h2>작성한 게시물</h2>
+
+        <div id="col">
+            <span class="title">제목</span>
+            <span class="author">작성자</span>
+            <span class="date">작성일</span>
+            <span class="views">조회수</span>
+        </div>
+
+        <div>
+            {% for board in boards %}
+                <div class="row">
+                    <span class="title">
+                        <a href="/post/{{ board.No }}">{{ board.title }}</a>
+                    </span>
+                    <span class="author">{{ board.id }}</span>
+                    <span class="date">{{ board.create_at }}</span>
+                    <span class="views">{{ board.views }}</span>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+</body>
+</html>
