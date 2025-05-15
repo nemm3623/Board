@@ -7,14 +7,10 @@
 </head>
 <body>
 <div class="login-container">
-    <h2><a href="/">Board</a></h2>
-    <form method="post" action="{{ url_for('users.login') }}">
-        <label>
-            <input name="id" type="text" placeholder="ID">
-        </label>
-        <label>
-            <input name="pw" type="password" placeholder="Password">
-        </label>
+    <form method="post" action="/login">
+        <input name="new_pw" type="password" placeholder="새로운">
+        <input name="re_new_pw" type="password" placeholder="Password">
+
         {% for msg in get_flashed_messages() %}
             <div class="error-message">{{ msg }}</div>
         {% endfor %}

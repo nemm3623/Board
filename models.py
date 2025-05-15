@@ -117,11 +117,11 @@ def get_all_user():
 
 
 # 로그인
-def get_user(id, pw):
+def get_user(id):
     db_connection, cursor = get_connection()
 
-    query = "SELECT * FROM Users WHERE id = %s and password = %s"
-    cursor.execute(query, (id, pw))
+    query = "SELECT * FROM Users WHERE id = %s"
+    cursor.execute(query, (id, ))
     result = cursor.fetchone()
 
     cursor.close()
@@ -170,7 +170,7 @@ def find_id(name, email):
 
 
 # 비밀번호 찾기
-def find_passwd(id, name, email):
+def find_user(id, name, email):
     db_connection, cursor = get_connection()
 
     query = "SELECT * FROM Users WHERE id = %s AND name = %s AND email = %s"

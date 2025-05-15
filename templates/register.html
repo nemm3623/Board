@@ -8,7 +8,7 @@
 <body>
 <div class="register-container">
     <h2><a href="/">Board</a></h2>
-    <form method="post" action="/register">
+    <form method="post" action="{{ url_for('users.register') }}">
         <h3>회원가입</h3>
 
         <label>아이디

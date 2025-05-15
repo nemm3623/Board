@@ -10,7 +10,9 @@
     <div class="module">
         <h3>
             {% if status %}
-                <a href="/logout">로그아웃</a>
+                <form method="post" action={{ url_for('users.logout') }}>
+                    <input type="submit" name="logout" value="로그아웃">
+                </form>
                 <a href="/my-profile">내 프로필</a>
             {% else %}
                 <a href="/login">로그인</a>
