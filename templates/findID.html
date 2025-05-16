@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>계정 찾기</title>
+    <link href="/static/CSS/findid.css" rel="stylesheet">
 </head>
 <body>
     <div>
@@ -16,12 +17,12 @@
             </label>
             <p style="color: red">{{ error }}</p>
             <input type="submit" value="확인">
+            {% if id %}
+                <div id="result">
+                    <p>해당 사용자 정보의 ID는 <b>{{ id }}</b> 입니다.</p>
+                </div>
+            {% endif %}
         </form>
     </div>
-{% if id %}
-	<div>
-        <p>해당 사용자 정보의 ID는 <b>{{ id }}</b> 입니다.</p>
-    </div>
-{% endif %}
 </body>
 </html>

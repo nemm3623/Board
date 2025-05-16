@@ -13,7 +13,9 @@ def write():
 
     elif request.method == 'POST':
 
-        if session.get('user') is None:
+        user = session.get('user')
+
+        if user is None:
             flash("로그인 후 이용해주세요.")
             return redirect(url_for('users.login'))
 
@@ -23,10 +25,11 @@ def write():
 
         if not title or not content:
             flash("빈칸을 모두 채워주세요.")
-            return redirect(url_for('write'))
+            return redirect(url_for('post.write'))
 
         else:
-            models.create_Board(title, content, session['user']['id'], int(secret))
+            models.create_board(title, content, user, int(secret))
+            return redirect(url_for('main.index'))
 
 
 # 게시물 방문
@@ -41,6 +44,8 @@ def post(no):
         # 클라이언트의 id가 작성자의 id와 같은지 확인
         is_author(board, client, no)
 
+        # return render_template('post.html', board=board)
+
     elif request.method == 'POST':
 
         status = request.form.get('edit')
@@ -49,7 +54,7 @@ def post(no):
             return redirect(url_for('update', no=no))
         elif status == "삭제":
             models.delete_board(no)
-            return redirect(url_for('index'))
+            return redirect(url_for('main.index'))
 
 
 # 게시글 수정
@@ -74,7 +79,7 @@ def edit(no):
 
         models.update_board(no, title, content, int(secret))
 
-        return redirect(url_for('index'))
+        return redirect(url_for('main.index'))
 
 
 def is_author(board, client, no):
@@ -84,7 +89,7 @@ def is_author(board, client, no):
         return render_template('post.html', board=board, author=True)
     elif board['secret'] == 1:    # 비밀 글의 경우 작성자가 아니면 확인불가
         flash("해당 글은 비밀글로 작성자만 볼 수 있습니다.")
-        return redirect(url_for('index'))
+        return redirect(url_for('main.index'))
     else:
         models.update_views(no)
         return render_template("post.html", board=board, author=False)

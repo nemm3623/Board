@@ -56,7 +56,7 @@ def get_board(keyword=None):
 
 
 # 게시물 작성
-def create_Board(title, content, id, secret):
+def create_board(title, content, id, secret):
     db_connection, cursor = get_connection()
     print(secret)
     query = "INSERT INTO Boards (title, content, id,secret) VALUES (%s, %s, %s,%s)"

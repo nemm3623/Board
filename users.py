@@ -77,7 +77,7 @@ def find_id():
         name = request.form['name']
         email = request.form['email']
 
-        result = models.find_id(name, email)
+        result = models.find_id(name, email)['id']
         if not result:
             error = "존재하지 않는 사용자입니다."
             return render_template('findID.html', error=error)
@@ -109,7 +109,29 @@ def find_pw():
 def my_profile():
     if request.method == 'GET':
         user = session.get('user')
+        if user is None:
+            flash("로그인 후 이용할 수 있습니다.")
+            return redirect(url_for('users.login'))
 
-        my_boards = models.get_board(user['id'])
+        my_boards = models.get_board(user)
+        user = models.get_user(user)
+        print(my_boards)
+        print(user)
 
         return render_template('my-profile.html', user=user, boards=my_boards)
+
+
+# @users_bp.route('/change-passwd', methods=['GET','POST'])
+# def change_password(id):
+#     if request.method == 'GET':
+#         user = session.get('user')
+#
+#         if user is None &&:
+
+
+
+
+
+
+
+    # user = models.get_user(user_id)

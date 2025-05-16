@@ -10,8 +10,8 @@
     <div class="module">
         <h3>
             {% if status %}
-                <form method="post" action={{ url_for('users.logout') }}>
-                    <input type="submit" name="logout" value="로그아웃">
+                <form method="post" action="{{ url_for('users.logout') }}" class="logout-form">
+                    <button type="submit" class="logout-link">로그아웃</button>
                 </form>
                 <a href="/my-profile">내 프로필</a>
             {% else %}
@@ -31,10 +31,15 @@
     </div>
 
     <div id="contents">
-        <div>
+        <div id="user_list">
+            <div id="col">
+                <span class="user_title">사용자 목록</span>
+            </div>
+            <div>
             {% for i in list %}
                 <div class="user">{{ i.id }}</div>
             {% endfor %}
+            </div>
         </div>
 
         <div>
